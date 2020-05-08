@@ -1,0 +1,31 @@
+#:kivy 1.11.1
+<MDTooltipIconButton@MDIconButton+MDTooltip>:
+    theme_text_color: 'Custom'
+    text_color:  app.theme_cls.bg_light
+<CustomTVLabel>:
+    shorten: True
+    height: dp(25)
+    size_hint_y: None
+    text_color: app.theme_cls.bg_light
+    theme_text_color: 'Custom'
+    color_selected: (1,1,1,.5)
+    text_size: self.texture_size
+    odd_color: app.theme_cls.primary_dark
+    even_color: app.theme_cls.primary_dark
+<DataTree>:
+    orientation: 'vertical'
+    ScrollView:
+        do_scroll_x: False
+        do_scroll_y: True
+        canvas.before:
+            Color:
+                rgba: app.theme_cls.primary_dark
+            Rectangle:
+                size: self.size
+                pos: self.pos
+        TreeView:
+            id: tree
+            hide_root: True
+            indent_level: 8
+            size_hint_y: None
+            height: self.minimum_height

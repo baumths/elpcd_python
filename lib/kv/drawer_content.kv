@@ -1,0 +1,136 @@
+#:kivy 1.11.1
+#:import delete_dialog lib.delete_dialog.delete_dialog
+<DrawerContent@MDNavigationDrawer>:
+    orientation: 'vertical'
+    MDBoxLayout:
+        size_hint_y: None
+        height: dp(200)
+        pos_hint: {'top': 1}
+        Image:
+            source: './assets/gedalogo.png'
+    MDSeparator:
+        height: dp(2.5)
+        color: app.theme_cls.primary_dark
+    ScrollView:
+        pos_hint: {'top': 1}
+        MDGridLayout:
+            id: screens
+            cols: 1
+            adaptive_height: True
+            MDBoxLayout:
+                orientation: 'vertical'
+                adaptive_height: True
+                ThreeLineAvatarIconListItem:
+                    text: '[b]Visualizar PCD[/b]'
+                    secondary_text: 'Plano de Classificação'
+                    tertiary_text: 'de Documentos'
+                    theme_text_color: 'Custom'
+                    text_color: app.theme_cls.primary_dark
+                    on_release:
+                        app.main_frame.switch_to_screen('pcd')
+                        root.toggle_nav_drawer()
+                    IconLeftWidget:
+                        icon:'file-tree'
+                        theme_text_color: 'Custom'
+                        text_color: app.theme_cls.primary_dark
+                        on_release:
+                            app.main_frame.switch_to_screen('pcd')
+                            root.toggle_nav_drawer()
+                    IconRightWidget:
+                        icon: 'chevron-right'
+                        theme_text_color: 'Custom'
+                        text_color: app.theme_cls.primary_dark
+                        on_release:
+                            app.main_frame.switch_to_screen('pcd')
+                            root.toggle_nav_drawer()
+                MDSeparator:
+                    height: dp(2.5)
+                    color: app.theme_cls.primary_dark
+                ThreeLineAvatarIconListItem:
+                    text: '[b]Visualizar TTD[/b]'
+                    secondary_text: 'Tabela de Temporalidade'
+                    tertiary_text: 'Documental'
+                    theme_text_color: 'Custom'
+                    text_color: app.theme_cls.primary_dark
+                    on_release: toast('TTD ainda não implementado')
+                    IconLeftWidget:
+                        icon:'calendar-clock'
+                        theme_text_color: 'Custom'
+                        text_color: app.theme_cls.primary_dark
+                        on_release: toast('TTD ainda não implementado')
+                    IconRightWidget:
+                        icon: 'chevron-right'
+                        theme_text_color: 'Custom'
+                        text_color: app.theme_cls.primary_dark
+                        on_release: toast('TTD ainda não implementado')
+                MDSeparator:
+                    height: dp(2.5)
+                    color: app.theme_cls.primary_dark
+                TwoLineAvatarIconListItem:
+                    text: '[b]Importar Dados[/b]'
+                    secondary_text: '.CSV ou .XML'
+                    theme_text_color: 'Custom'
+                    text_color: app.theme_cls.primary_dark
+                    on_release: toast('Importação ainda não implementada')
+                    IconLeftWidget:
+                        icon:'file-import-outline'
+                        theme_text_color: 'Custom'
+                        text_color: app.theme_cls.primary_dark
+                        on_release: toast('Importação ainda não implementada')
+                    IconRightWidget:
+                        icon: 'chevron-right'
+                        theme_text_color: 'Custom'
+                        text_color: app.theme_cls.primary_dark
+                        on_release: toast('Importação ainda não implementada')
+                MDSeparator:
+                    height: dp(2.5)
+                    color: app.theme_cls.primary_dark
+                TwoLineAvatarIconListItem:
+                    text: '[b]Exportar Dados[/b]'
+                    secondary_text: '.CSV ou .XML'
+                    theme_text_color: 'Custom'
+                    text_color: app.theme_cls.primary_dark
+                    on_release:
+                        app.main_frame.switch_to_screen('export')
+                        root.toggle_nav_drawer()
+                    IconLeftWidget:
+                        icon:'file-export-outline'
+                        theme_text_color: 'Custom'
+                        text_color: app.theme_cls.primary_dark
+                        on_release:
+                            app.main_frame.switch_to_screen('export')
+                            root.toggle_nav_drawer()
+                    IconRightWidget:
+                        icon: 'chevron-right'
+                        theme_text_color: 'Custom'
+                        text_color: app.theme_cls.primary_dark
+                        on_release:
+                            app.main_frame.switch_to_screen('export')
+                            root.toggle_nav_drawer()
+                MDSeparator:
+                    height: dp(2.5)
+                    color: app.theme_cls.primary_dark
+    MDFloatLayout:
+        size_hint: 1,.1
+        pos_hint: {'bottom': 1}
+        md_bg_color: app.theme_cls.primary_dark
+        MDIconButton:
+            icon: 'blogger'
+            theme_text_color: 'Custom'
+            text_color: app.theme_cls.bg_light
+            pos_hint: {'center_y':.5,'right':1}
+            on_release: open_social_media('blogger')
+        MDIconButton:
+            icon: 'facebook'
+            theme_text_color: 'Custom'
+            text_color: app.theme_cls.bg_light
+            pos_hint: {'center_y':.5,'right':.85}
+            on_release: open_social_media('facebook')
+        MDIconButton:
+            icon: 'delete'
+            theme_text_color: 'Custom'
+            text_color: app.theme_cls.bg_darkest
+            pos_hint: {'center_y':.5,'right': .15}
+            on_release:
+                delete_dialog()
+                root.toggle_nav_drawer()

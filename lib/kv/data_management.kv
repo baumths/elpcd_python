@@ -1,0 +1,187 @@
+#:kivy 1.11.1
+<AddMDTextField@MDTextField>:
+    mode: 'line'
+    write_tab: False
+    size_hint_y: None
+    height: dp(40)
+<CustomTB@Button+ToggleButtonBehavior>:
+    group: 'indicador'
+    size_hint: 1,.7
+    color: (1,1,1,1)
+    allow_no_selection: False
+    background_color: app.theme_cls.primary_dark if self.state == 'down' else app.theme_cls.primary_light
+    background_normal: ''
+    background_disabled_down: ''
+    background_normal_disabled: ''
+<DataManagement>:
+    orientation: 'vertical'
+    size_hint: 1,1
+    spacing: dp(10)
+    ScrollView:
+        do_scroll_x: False
+        do_scroll_y: True
+        MDBoxLayout:
+            orientation: 'vertical'
+            size_hint_y: None
+            height: self.minimum_height
+            padding: (dp(50),0)
+            MDBoxLayout:
+                size_hint_y: None
+                height: dp(60)
+                spacing: dp(10)
+                MDIcon:
+                    id: label_icon
+                    icon: 'lock-open-variant-outline' if not root.view_only else 'lock-outline'
+                    size_hint: None,None
+                    size: dp(30),dp(30)
+                    pos_hint: {'center_y':.5}
+                    color: app.theme_cls.primary_dark if not root.view_only else (1,0,0,1)
+                MDLabel:
+                    id: add_label
+                    text: cls_nome.text if not root.new_cls else 'Adicionando nova Classe'
+                    markup: True
+                    shorten: True
+                    font_size: '30sp'
+                    color: app.theme_cls.primary_dark
+
+            AddMDTextField:
+                id: cls_nome
+                required: True
+                multiline: False
+                hint_text: 'Nome'
+                disabled: root.view_only
+                helper_text: 'Campo obrigatório'
+                helper_text_mode: 'on_focus'
+            
+            MDGridLayout:
+                cols: 2
+                spacing: dp(80)
+                size_hint_y: None
+                height: dp(50)
+                padding: [0,0,0,dp(10)]
+                AddMDTextField:
+                    id: cls_codigo
+                    required: True
+                    multiline: False
+                    hint_text: 'Código'
+                    disabled: root.view_only
+                    helper_text: 'Campo obrigatório'
+                    helper_text_mode: 'on_focus'
+
+                AddMDTextField:
+                    id: cls_sub
+                    disabled: True
+                    hint_text: 'Subordinação'
+                    icon_right: 'lock-outline'
+                    icon_right_color: app.theme_cls.primary_light
+            
+            AddMDTextField:
+                id: reg_abertura
+                multiline: True
+                disabled: root.view_only
+                hint_text: 'Registro de Abertura'
+            
+            AddMDTextField:
+                id: reg_desativacao
+                multiline: True
+                disabled: root.view_only
+                hint_text: 'Registro de Desativação'
+            
+            AddMDTextField:
+                id: reg_reativacao
+                multiline: True
+                disabled: root.view_only
+                hint_text: 'Registro de Reativação'
+
+            AddMDTextField:
+                id: reg_mudanca_nome
+                multiline: True
+                disabled: root.view_only
+                hint_text: 'Registro de Mudança de Nome'
+            
+            AddMDTextField:
+                id: reg_deslocamento
+                multiline: True
+                disabled: root.view_only
+                hint_text: 'Registro de Deslocamento'
+            
+            AddMDTextField:
+                id: reg_extincao
+                multiline: True
+                disabled: root.view_only
+                hint_text: 'Registro de Extinção'
+            
+            MDBoxLayout:
+                orientation: 'horizontal'
+                size_hint_y: None
+                height: dp(50)
+                AddMDTextField:
+                    disabled: True
+                    hint_text: 'Indicador de Classe Ativa/Inativa'
+                    size_hint_x: .77
+                MDBoxLayout:
+                    size_hint_x: .23
+                    spacing: dp(20)
+                    CustomTB:
+                        id: ativa
+                        text: 'Ativa'
+                        state: 'down'
+                        disabled: root.view_only
+                    CustomTB:
+                        id: inativa
+                        text: 'Inativa'
+                        disabled: root.view_only
+    MDBoxLayout:
+        id: btn_frame
+        size_hint_y: .1
+
+<EditButtons>:
+    orientation: 'horizontal'
+    size_hint: 1,1
+    padding: dp(10)
+    spacing: dp(10)
+    md_bg_color: app.theme_cls.primary_dark
+    MDRectangleFlatButton:
+        text: 'Salvar'
+        text_color: (1,1,1,1)
+        size_hint: .15,1
+        on_release: 
+            app.data_management.insert_data_into_db()
+            app.pcd_tree.data_tree.regen_tree()
+    MDLabel:
+        size_hint: 1,1
+    MDRectangleFlatButton:
+        text: 'Cancelar'
+        text_color: (1,1,1,1)
+        size_hint: .15,1
+        on_release: app.main_frame.ids.data_frame.clear_widgets()
+
+<ViewButtons>:
+    orientation: 'horizontal'
+    size_hint: 1,1
+    padding: dp(10)
+    spacing: dp(10)
+    md_bg_color: app.theme_cls.primary_dark
+    MDRectangleFlatButton:
+        id: edit_btn
+        markup: True
+        text_color: (1,1,1,1)
+        on_release:
+            app.data_management.enable_edit()
+    MDRectangleFlatButton:
+        text: 'Adicionar Novo'
+        text_color: (1,1,1,1)
+        on_release: app.set_data_management_widget(view_only=False,item_data=app.data_management.item_data,new_cls=False)
+    MDLabel:
+        size_hint: .6,1
+    MDRectangleFlatButton:
+        text: 'Apagar'
+        text_color: (1,1,1,1)
+        size_hint: .1,1
+        md_bg_color: (1,0,0,1)
+        on_release: app.data_management.show_delete_dialog()
+    MDRectangleFlatButton:
+        text: 'Cancelar'
+        text_color: (1,1,1,1)
+        size_hint: .1,1
+        on_release: app.main_frame.ids.data_frame.clear_widgets()

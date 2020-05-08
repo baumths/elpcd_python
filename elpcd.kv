@@ -1,0 +1,75 @@
+#:kivy 1.11.1
+#:import toast kivymd.toast.toast
+#:import open_social_media lib.social_media.open_social_media
+#:include ./lib/kv/drawer_content.kv
+<MainFrame>:
+    id: main_frame
+    orientation: 'vertical'
+    Manager:
+        id: screen_manager
+        MDScreen:
+            name: "welcome"
+            MDBoxLayout:
+                padding: (dp(100),dp(200))
+                orientation: 'vertical'
+                md_bg_color: app.theme_cls.primary_dark
+                MDRoundFlatButton:
+                    text: f'[b]Bem-vindo ao [i]El PCD[/i][/b]'
+                    markup: True
+                    size_hint: 1, 1
+                    halign: 'center'
+                    md_bg_color: (1,1,1,1)
+                    font_size: sp(self.width*0.1)
+                    text_color: app.theme_cls.primary_dark
+                    on_release: screen_manager.current = 'pcd'
+        MDScreen:
+            name: "pcd"
+            MDBoxLayout:
+                orientation: 'vertical'
+                md_bg_color: app.theme_cls.bg_light
+                MDToolbar:
+                    title: "Menu"
+                    elevation: 10
+                    theme_text_color: 'Custom'
+                    specific_text_color: (1,1,1,1)
+                    md_bg_color: app.theme_cls.primary_dark
+                    left_action_items: [['menu', lambda x: nav_drawer.toggle_nav_drawer()]]
+                    right_action_items: [['magnify', lambda x: toast('Pesquisa ainda não implementada',1.5)]]
+                MDBoxLayout:
+                    MDBoxLayout:
+                        id: tree_frame
+                        orientation: 'vertical'
+                        size_hint_x: .3
+                        padding: [dp(10),dp(10),dp(5),dp(10)]
+                        spacing: dp(10)
+
+                    MDBoxLayout:
+                        orientation: 'vertical'
+                        padding: [dp(5),dp(10),dp(10),dp(10)]
+                        size_hint_x: .7
+                        spacing: dp(10)
+                        MDBoxLayout:
+                            id: data_frame
+                            orientation: 'vertical'
+                            md_bg_color: app.theme_cls.bg_darkest
+        MDScreen:
+            name: "export"
+            on_pre_enter: app.export_data.data_tree.regen_tree()
+            MDBoxLayout:
+                orientation: 'vertical'
+                md_bg_color: app.theme_cls.bg_light
+                MDToolbar:
+                    id: toolbar
+                    title: "Menu"
+                    elevation: 10
+                    theme_text_color: 'Custom'
+                    specific_text_color: (1,1,1,1)
+                    md_bg_color: app.theme_cls.primary_dark
+                    left_action_items: [['menu', lambda x: nav_drawer.toggle_nav_drawer()]]
+                MDBoxLayout:
+                    id: export_frame
+                    orientation: 'vertical'
+                    md_bg_color: app.theme_cls.bg_light
+
+    DrawerContent:
+        id: nav_drawer

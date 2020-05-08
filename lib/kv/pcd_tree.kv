@@ -1,0 +1,24 @@
+#:kivy 1.11.1
+<PCDTree>:
+    orientation: 'vertical'
+    MDFloatLayout:
+        size_hint: 1,.075
+        padding:(dp(50),0)
+        md_bg_color: app.theme_cls.primary_dark
+        MDTooltipIconButton:
+            icon: root.btn_icon[0]
+            tooltip_text: root.btn_text[0]
+            pos_hint: {'center_y':.5,'right': .13}
+            on_release:
+                root.switch_button()
+                root.data_tree.toggle_all_nodes()
+        MDTooltipIconButton:
+            icon: 'folder-plus-outline'
+            tooltip_text: 'Nova Classe'
+            pos_hint: {'center_y':.5,'right': 1}
+            on_release: app.set_data_management_widget(view_only=False,item_data={},new_cls=True)
+    MDSeparator:
+        height: dp(2.5)
+        color: app.theme_cls.bg_light
+    MDBoxLayout:
+        id: tree_frame
