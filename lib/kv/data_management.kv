@@ -1,30 +1,36 @@
 #:kivy 1.11.1
+<DataMDRaisedButton@MDRaisedButton>:
+    elevation: 10
+    text_color: app.theme_cls.bg_light
+    md_bg_color: app.theme_cls.primary_dark
+    pos_hint: {'center_x': .5, 'center_y': .5}
 <AddMDTextField@MDTextField>:
-    mode: 'line'
     write_tab: False
     size_hint_y: None
     height: dp(40)
 <CustomTB@Button+ToggleButtonBehavior>:
-    group: 'indicador'
-    size_hint: 1,.7
-    color: (1,1,1,1)
+    width: dp(115)
+    size_hint: None,.75
+    pos_hint: {'top': 1}
     allow_no_selection: False
-    background_color: app.theme_cls.primary_dark if self.state == 'down' else app.theme_cls.primary_light
+    background_down: ''
     background_normal: ''
     background_disabled_down: ''
-    background_normal_disabled: ''
+    background_disabled_normal: ''
+    color: app.theme_cls.bg_light
+    background_color: app.theme_cls.primary_dark if self.state == 'down' else app.theme_cls.primary_light
 <DataManagement>:
     orientation: 'vertical'
     size_hint: 1,1
     spacing: dp(10)
     ScrollView:
-        do_scroll_x: False
-        do_scroll_y: True
+        bar_width: dp(5)
+        do_scroll: False, True
+        scroll_wheel_distance: '800px'
         MDBoxLayout:
-            orientation: 'vertical'
-            size_hint_y: None
-            height: self.minimum_height
             padding: (dp(50),0)
+            adaptive_height: True
+            orientation: 'vertical'
             MDBoxLayout:
                 size_hint_y: None
                 height: dp(60)
@@ -41,7 +47,7 @@
                     text: cls_nome.text if not root.new_cls else 'Adicionando nova Classe'
                     markup: True
                     shorten: True
-                    font_size: '30sp'
+                    font_style: 'H4'
                     color: app.theme_cls.primary_dark
 
             AddMDTextField:
@@ -114,74 +120,147 @@
             MDBoxLayout:
                 orientation: 'horizontal'
                 size_hint_y: None
-                height: dp(50)
+                height: dp(60)
+                padding: [0,0,0,dp(10)]
                 AddMDTextField:
                     disabled: True
                     hint_text: 'Indicador de Classe Ativa/Inativa'
-                    size_hint_x: .77
+                    size_hint_x: 1
                 MDBoxLayout:
-                    size_hint_x: .23
+                    width: dp(250)
                     spacing: dp(20)
+                    size_hint_x: None
                     CustomTB:
                         id: ativa
                         text: 'Ativa'
                         state: 'down'
+                        group: 'indicador'
                         disabled: root.view_only
                     CustomTB:
                         id: inativa
                         text: 'Inativa'
+                        group: 'indicador'
                         disabled: root.view_only
+            MDSeparator:
+                height: dp(2.5)
+                color: app.theme_cls.primary_dark
+            MDBoxLayout:
+                size_hint_y: None
+                height: dp(60)
+                spacing: dp(10)
+                MDIcon:
+                    icon: 'calendar-clock'
+                    size_hint: None,None
+                    size: dp(30),dp(30)
+                    pos_hint: {'center_y':.5}
+                    color: app.theme_cls.primary_dark
+                MDLabel:
+                    text: 'Temporalidade Documental'
+                    font_size: sp(30)
+                    color: app.theme_cls.primary_dark
+            AddMDTextField:
+                id: fase_corrente
+                multiline: False
+                disabled: root.view_only
+                hint_text: 'Prazo de Guarda na Fase Corrente'
+            AddMDTextField:
+                id: evento_fase_corrente
+                multiline: False
+                disabled: root.view_only
+                hint_text: 'Evento de Contagem na Fase Corrente'
+                helper_text: 'Evento que determina a contagem do prazo de guarda fase corrente'
+                helper_text_mode: 'on_focus'
+            AddMDTextField:
+                id: fase_intermediaria
+                multiline: False
+                disabled: root.view_only
+                hint_text: 'Prazo de Guarda na Fase Intermediária'
+            AddMDTextField:
+                id: evento_fase_inter
+                multiline: False
+                disabled: root.view_only
+                hint_text: 'Evento de Contagem na Fase Intermediária'
+                helper_text: 'Evento que determina a contagem do prazo de guarda fase intermediária'
+                helper_text_mode: 'on_focus'
+            MDBoxLayout:
+                orientation: 'horizontal'
+                size_hint_y: None
+                height: dp(50)
+                AddMDTextField:
+                    disabled: True
+                    hint_text: 'Destinação Final'
+                    size_hint_x: 1
+                MDBoxLayout:
+                    width: dp(250)
+                    spacing: dp(20)
+                    size_hint_x: None
+                    CustomTB:
+                        id: preservacao
+                        text: 'Preservação'
+                        state: 'down'
+                        group: 'destinacao'
+                        disabled: root.view_only
+                    CustomTB:
+                        id: eliminacao
+                        text: 'Eliminação'
+                        group: 'destinacao'
+                        disabled: root.view_only
+            AddMDTextField:
+                id: reg_alteracao
+                multiline: True
+                disabled: root.view_only
+                hint_text: 'Registro de Alteração'
+            AddMDTextField:
+                id: observacoes
+                multiline: True
+                disabled: root.view_only
+                hint_text: 'Observações'
+            MDSeparator:
+                height: dp(2.5)
+                color: app.theme_cls.primary_dark
+            MDSeparator:
+                height: dp(2.5)
+                color: (0,0,0,0)
     MDBoxLayout:
         id: btn_frame
-        size_hint_y: .1
+        height: dp(40)
+        padding: (dp(50),0)
+        adaptive_height: True
+        orientation: 'horizontal'
+        md_bg_color: app.theme_cls.bg_darkest
 
 <EditButtons>:
+    padding: [0,0,0,dp(10)]
     orientation: 'horizontal'
-    size_hint: 1,1
-    padding: dp(10)
-    spacing: dp(10)
-    md_bg_color: app.theme_cls.primary_dark
-    MDRectangleFlatButton:
+    DataMDRaisedButton:
         text: 'Salvar'
-        text_color: (1,1,1,1)
-        size_hint: .15,1
-        on_release: 
-            app.data_management.insert_data_into_db()
-            app.pcd_tree.data_tree.regen_tree()
+        on_release: app.data_management.insert_data_into_db()
     MDLabel:
-        size_hint: 1,1
-    MDRectangleFlatButton:
+        size_hint: .7,1
+    DataMDRaisedButton:
         text: 'Cancelar'
-        text_color: (1,1,1,1)
-        size_hint: .15,1
         on_release: app.main_frame.ids.data_frame.clear_widgets()
 
 <ViewButtons>:
+    spacing: dp(5)
+    padding: [0,0,0,dp(10)]
     orientation: 'horizontal'
-    size_hint: 1,1
-    padding: dp(10)
-    spacing: dp(10)
-    md_bg_color: app.theme_cls.primary_dark
-    MDRectangleFlatButton:
+    DataMDRaisedButton:
         id: edit_btn
         markup: True
-        text_color: (1,1,1,1)
-        on_release:
-            app.data_management.enable_edit()
-    MDRectangleFlatButton:
+        on_release: app.data_management.enable_edit()
+    DataMDRaisedButton:
         text: 'Adicionar Novo'
-        text_color: (1,1,1,1)
         on_release: app.set_data_management_widget(view_only=False,item_data=app.data_management.item_data,new_cls=False)
     MDLabel:
-        size_hint: .6,1
-    MDRectangleFlatButton:
-        text: 'Apagar'
-        text_color: (1,1,1,1)
-        size_hint: .1,1
-        md_bg_color: (1,0,0,1)
+        size_hint: .4,1
+    MDTooltipIconButton:
+        icon: 'delete'
+        text_color: (1,0,0,1)
+        theme_text_color: 'Custom'
+        pos_hint: {'center_y': .5}
+        tooltip_text: 'Apagar Registro'
         on_release: app.data_management.show_delete_dialog()
-    MDRectangleFlatButton:
+    DataMDRaisedButton:
         text: 'Cancelar'
-        text_color: (1,1,1,1)
-        size_hint: .1,1
         on_release: app.main_frame.ids.data_frame.clear_widgets()
