@@ -1,5 +1,5 @@
 # ElPCD BETA 0.2
-Elaborador de Plano de Classificação de Documentos (e Tabela de Temporalidade Documental 'WIP')
+Elaborador de Plano de Classificação de Documentos e Tabela de Temporalidade Documental
 
 - versão 0.1:
     - Cria, edita e apaga classes, padrão das classes: e-ARQ Brasil
