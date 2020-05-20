@@ -1,15 +1,20 @@
-# ElPCD 0.1 alpha
+# ElPCD BETA 0.2
 Elaborador de Plano de Classificação de Documentos (e Tabela de Temporalidade Documental 'WIP')
 
 - versão 0.1:
     - Cria, edita e apaga classes, padrão das classes: e-ARQ Brasil
     - Exporta os dados em .CSV podendo ser importado pelo AtoM (https://accesstomemory.org)
-    
+
+- versão 0.2:
+    - Adicionado Modulo TTD, no padrão e-ARQ Brasil
+    - Visualização de TTD implementada
+    - Atualizada exportação .CSV para suportar Modulo TTD
+
 - Futuras versões:
-    - Modulo Importação do PCD em .CSV
-    - Modulo Tabela de Temporalidade Documental, no padrão e-ARQ Brasil
-    - Modulos Importação e Exportação de .CSV para o Modulo TTD
-    - Modulo de Importação e Exportação de .XML para os Modulos PCD e TTD
+    - Implementar pesquisa de dados para facilitar navegação em árvore
+    - Implementar um campo para o usuário fornecer um nome ao repositório
+    - Importação do PCD e TTD em .CSV
+    - Importação e Exportação de .XML para os Modulos PCD e TTD
 
 Quaisquer sugestões, por favor entre em contato pelo Twitter.
 
@@ -18,7 +23,7 @@ Email do grupo de pesquisa: cnpqdocsdigitais@gmail.com
 Link do projeto no GitHub: (https://github.com/MBaumgartenBR/ElPCD)
 Link para contato: (https://twitter.com/mbaumgartenbr)
 
-Para rodar o projeto no seu ambiente de desenvolvimento (assumindo que já possua python,pip,venv instalados):
+Para rodar o projeto no seu ambiente de desenvolvimento (assumindo que já possua python,pip,virtualenv instalados):
 Clone o repositório do projeto:
 ```bash
 git clone https://github.com/MBaumgartenBR/ElPCD.git
@@ -35,20 +40,20 @@ Ative o ambiente virtual:
 ```bash
 source venv/bin/activate
 ```
-Atualize os pacotes pip, wheel, setuptools e instale o cython:
+Atualize os pacotes pip, wheel, setuptools:
 ```bash
-pip3 install --upgrade pip, wheel, setuptools, cython
+pip3 install --upgrade pip wheel setuptools
 ```
-Instale o Kivy (1.11.1) Framework para Python 3.8:
+Instale o Kivy Framework (1.11.1) para Python 3.8:
 ```bash
-pip3 install kivy[base] kivy_examples --pre --extra-index-url https://kivy.org/downloads/simple/
+pip3 install kivy[base] --pre --extra-index-url https://kivy.org/downloads/simple/
 ```
 Instale o KivyMD:
 ```bash
 pip3 install git+https://github.com/HeaTTheatR/KivyMD.git
 ```
 Tudo pronto para modificar quaisquer arquivos que desejar.
-#Para executar a aplicação:
+# Para executar a aplicação:
 ```bash
 python3 main.py
 ```

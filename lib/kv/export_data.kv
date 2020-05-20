@@ -4,38 +4,44 @@
     spacing: dp(2.5)
     MDBoxLayout:
         id: tree_frame
-    MDFloatLayout:
-        size_hint: .05,1
-        padding:(0,dp(50))
+    MDBoxLayout:
+        width: dp(60)
+        size_hint_x: None
+        orientation: 'vertical'
         md_bg_color: app.theme_cls.primary_dark
         MDTooltipIconButton:
+            height: dp(50)
             icon: 'refresh'
+            pos_hint: {'center_x': .5}
             tooltip_text: 'Atualizar Árvore'
-            pos_hint: {'center_x': .5, 'top': 1}
             on_release:
                 root.switch_button(True)
                 root.data_tree.regen_tree()
         MDSeparator:
             height: dp(2.5)
+            pos_hint: {'center_x': .5}
             color: app.theme_cls.bg_light
-            pos_hint: {'center_x': .5, 'top': .92}
         MDTooltipIconButton:
+            height: dp(50)
             icon: root.btn_icon[0]
+            pos_hint: {'center_x':.5}
             tooltip_text: root.btn_text[0]
-            pos_hint: {'center_x':.5,'top': .915}
             on_release:
                 root.switch_button()
                 root.data_tree.toggle_all_nodes()
         MDSeparator:
             height: dp(2.5)
+            pos_hint: {'center_x': .5}
             color: app.theme_cls.bg_light
-            pos_hint: {'center_x': .5, 'top': .835}
         MDTooltipIconButton:
+            height: dp(50)
+            pos_hint: {'center_x': .5}
             icon: 'file-export-outline'
             tooltip_text: 'Exportar .CSV'
-            pos_hint: {'center_x': .5, 'top': .83}
             on_release: root.confirm_export_dialog()
         MDSeparator:
             height: dp(2.5)
+            pos_hint: {'center_x': .5}
             color: app.theme_cls.bg_light
-            pos_hint: {'center_x': .5, 'top': .745}
+        MDLabel:
+            size_hint_y: 1

@@ -5,12 +5,14 @@ from kivymd.toast import toast
 from kivymd.app import MDApp
 
 import lib.data_cls
+import lib.utils
 
 class CustomTooltipIconButton(MDTooltip,MDIconButton):
     pass
 
 def delete_dialog():
-    app = MDApp.get_running_app()
+    """Create and open delete dialog popup for deleting the entire database table"""
+    app = MDApp.get_running_app() ## App object reference
     dialog = MDDialog(
         auto_dismiss=False,
         title= 'Deseja APAGAR seu PCD inteiro?',
@@ -37,11 +39,12 @@ def delete_dialog():
     dialog.open()
 
 def _delete_table():
-    app = MDApp.get_running_app()
+    """Callback for deleting database table"""
+    app = MDApp.get_running_app() ## App object reference
     try:
-        lib.data_cls.drop_table('PCD')
-    except Exception as expt:
-        toast(str(expt))
+        lib.data_cls.drop_table()
+    except lib.utils.NotAbleToDeleteDB:
+        toast('Impossível apagar dados!')
     else:
         toast('PCD apagado com sucesso!')
-        app.pcd_tree.data_tree.regen_tree()
+        app.pcd_tree.data_tree.regen_tree() ## regens tree after droping table

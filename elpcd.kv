@@ -1,6 +1,7 @@
 #:kivy 1.11.1
 #:import toast kivymd.toast.toast
-#:import open_social_media lib.social_media.open_social_media
+#:import view_ttd lib.py.view_ttd.view_ttd
+#:import open_social_media lib.utils.open_social_media
 #:include ./lib/kv/drawer_content.kv
 <MainFrame>:
     id: main_frame
@@ -18,8 +19,8 @@
                     markup: True
                     size_hint: 1, 1
                     halign: 'center'
-                    md_bg_color: (1,1,1,1)
-                    font_size: sp(self.width*0.1)
+                    font_size: '96sp'
+                    md_bg_color: app.theme_cls.bg_light
                     text_color: app.theme_cls.primary_dark
                     on_release: screen_manager.current = 'pcd'
         MDScreen:
@@ -30,12 +31,14 @@
                 MDToolbar:
                     title: "Menu"
                     elevation: 10
+                    height: dp(50)
                     theme_text_color: 'Custom'
-                    specific_text_color: (1,1,1,1)
+                    specific_text_color: app.theme_cls.bg_light
                     md_bg_color: app.theme_cls.primary_dark
-                    left_action_items: [['menu', lambda x: nav_drawer.toggle_nav_drawer()]]
+                    left_action_items: [['menu', lambda x: nav_drawer.set_state()]]
                     right_action_items: [['magnify', lambda x: toast('Pesquisa ainda não implementada',1.5)]]
                 MDBoxLayout:
+                    orientation: 'horizontal'
                     MDBoxLayout:
                         id: tree_frame
                         orientation: 'vertical'
@@ -54,7 +57,9 @@
                             md_bg_color: app.theme_cls.bg_darkest
         MDScreen:
             name: "export"
-            on_pre_enter: app.export_data.data_tree.regen_tree()
+            on_pre_enter:
+                app.export_data.data_tree.regen_tree()
+                app.export_data.switch_button(reset=True)
             MDBoxLayout:
                 orientation: 'vertical'
                 md_bg_color: app.theme_cls.bg_light
@@ -62,14 +67,19 @@
                     id: toolbar
                     title: "Menu"
                     elevation: 10
+                    height: dp(50)
                     theme_text_color: 'Custom'
-                    specific_text_color: (1,1,1,1)
+                    specific_text_color: app.theme_cls.bg_light
                     md_bg_color: app.theme_cls.primary_dark
-                    left_action_items: [['menu', lambda x: nav_drawer.toggle_nav_drawer()]]
+                    left_action_items: [['menu', lambda x: nav_drawer.set_state()]]
                 MDBoxLayout:
                     id: export_frame
                     orientation: 'vertical'
                     md_bg_color: app.theme_cls.bg_light
+        MDScreen:
+            name: "viewttd"
+            on_pre_enter: view_ttd()
+            md_bg_color: app.theme_cls.primary_dark
 
     DrawerContent:
         id: nav_drawer
