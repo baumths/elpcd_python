@@ -6,7 +6,7 @@ Elaborador de Plano de Classificação de Documentos e Tabela de Temporalidade D
     - Exporta os dados em .CSV podendo ser importado pelo AtoM (https://accesstomemory.org)
 
 - versão 0.2:
-    - Adicionado Modulo TTD, no padrão e-ARQ Brasil
+    - Adicionado Módulo TTD, no padrão e-ARQ Brasil
     - Visualização de TTD implementada
     - Atualizada exportação .CSV para suportar Modulo TTD
 
