@@ -3,15 +3,12 @@ from kivymd.uix.boxlayout import MDBoxLayout
 from kivymd.uix.dialog import MDDialog
 from kivymd.uix.label import MDLabel
 from kivymd.toast import toast
-from kivy.lang import Builder
 from kivymd.app import MDApp
 
 import kivy.properties as prop
 
 from lib.data_cls import ManageData, delete_row
 import lib.utils
-
-Builder.load_file('./lib/kv/data_management.kv')
 
 class DataManagement(MDBoxLayout):
     """Object of text fields and buttons for managing data"""

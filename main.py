@@ -4,10 +4,11 @@ Config.set('graphics', 'window_state', 'maximized') ## Set screen to Maximized
 Config.set('input', 'mouse', 'mouse,multitouch_on_demand') ## Turns off red circles on left click
 
 from pathlib import Path
-import sqlite3
+import sqlite3, sys, os
 
 from kivy.uix.screenmanager import ScreenManager, FadeTransition
 from kivymd.uix.navigationdrawer import NavigationLayout
+from kivy.lang import Builder
 from kivymd.app import MDApp
 from kivy.clock import Clock
 
@@ -22,10 +23,10 @@ def set_path(directory=''):
     """Sets path to current folder, if directory specified, creates folder inside working directory
     :param directory: str
     :return: str"""
-    path = Path(f"./{directory}")
+    path = Path(f".{os.sep}{directory}")
     if directory != '':
         path.mkdir(parents=True, exist_ok=True)
-    return str(path.resolve()) + '/'
+    return str(path.resolve())
 
 class MainFrame(NavigationLayout):
     """Main Frame of the application"""
@@ -74,7 +75,7 @@ class ElPCD(MDApp):
         self.theme_cls.primary_palette = "Indigo"
         self.theme_cls.accent_palette = "Gray"
         ## Sets Sqlite connection and cursor \/
-        self.connection = sqlite3.connect(f'{set_path("data")}database.db')
+        self.connection = sqlite3.connect(f'{set_path("data")}{os.sep}database.db')
         self.cursor = self.connection.cursor()
         ## Sets up table PCD in sqlite \/
         lib.data_cls.create_tables()
@@ -111,4 +112,16 @@ class ElPCD(MDApp):
         return self.main_frame
 
 if __name__ == "__main__":
+
+    if hasattr(sys, "_MEIPASS"):
+        from kivy.resources import resource_add_path
+        os.environ["ELPCD_ROOT"] = sys._MEIPASS
+        resource_add_path(os.environ["ELPCD_ROOT"])
+    else:
+        os.environ["ELPCD_ROOT"] = os.path.dirname(os.path.abspath(__file__))
+
+    Builder.load_file(f'{os.environ["ELPCD_ROOT"]}{os.sep}elpcd.kv')
+    for item in os.listdir(f'{os.environ["ELPCD_ROOT"]}{os.sep}lib{os.sep}kv{os.sep}'):
+        Builder.load_file(f'{os.environ["ELPCD_ROOT"]}{os.sep}lib{os.sep}kv{os.sep}{item}')
+
     ElPCD().run()

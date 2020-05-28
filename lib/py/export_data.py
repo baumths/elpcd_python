@@ -3,7 +3,6 @@ from kivymd.uix.boxlayout import MDBoxLayout
 from kivymd.uix.snackbar import Snackbar
 from kivymd.uix.dialog import MDDialog
 from kivymd.toast import toast
-from kivy.lang import Builder
 from kivymd.app import MDApp
 
 import kivy.properties as prop
@@ -11,8 +10,6 @@ import kivy.properties as prop
 from lib.py.data_tree import DataTree
 from lib.csv_export import ExportCSV
 import lib.utils
-
-Builder.load_file('./lib/kv/export_data.kv')
 
 class ExportData(MDBoxLayout):
     """Export screen widgets object"""

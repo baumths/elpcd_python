@@ -3,6 +3,7 @@ from kivymd.app import MDApp
 from datetime import datetime
 from pathlib import Path
 import csv
+import os
 
 import lib.gen_ref_code
 import lib.utils
@@ -107,9 +108,9 @@ class ExportCSV:
         """Creates folder inside working directory and set path to current folder
         :param directory: str
         :return: str"""
-        path = Path(f'./{directory}')
+        path = Path(f'.{os.sep}{directory}')
         path.mkdir(parents=True, exist_ok=True)
-        return str(path.resolve()) + '/'
+        return str(path.resolve()) + os.sep
     
     def get_path(self):
         """File path getter

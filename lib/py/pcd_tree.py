@@ -1,11 +1,8 @@
 from kivymd.uix.boxlayout import MDBoxLayout
-from kivy.lang import Builder
 
 import kivy.properties as prop
 
 from lib.py.data_tree import DataTree
-
-Builder.load_file('./lib/kv/pcd_tree.kv')
 
 class PCDTree(MDBoxLayout):
 

@@ -1,5 +1,5 @@
 #:kivy 1.11.1
-#:import delete_dialog lib.delete_dialog.delete_dialog
+#:import os os
 <DrawerContent@MDNavigationDrawer>:
     orientation: 'vertical'
     MDBoxLayout:
@@ -7,7 +7,7 @@
         height: dp(200)
         pos_hint: {'top': 1}
         Image:
-            source: './assets/gedalogo.png'
+            source: f'{os.environ["ELPCD_ROOT"]}{os.sep}assets{os.sep}gedalogo.png'
     ScrollView:
         size_hint_y: 1
         do_scroll_y: True

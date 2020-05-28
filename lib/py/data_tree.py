@@ -2,12 +2,9 @@ from kivymd.uix.boxlayout import MDBoxLayout
 from kivy.uix.treeview import TreeViewNode
 from kivymd.uix.label import MDLabel
 from kivymd.toast import toast
-from kivy.lang import Builder
 from kivymd.app import MDApp
 
 import kivy.properties as prop
-
-Builder.load_file('./lib/kv/data_tree.kv')
 
 class DataTree(MDBoxLayout):
     """Default TreeView object"""
