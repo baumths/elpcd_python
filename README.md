@@ -10,6 +10,12 @@ Elaborador de Plano de Classificação de Documentos e Tabela de Temporalidade D
     - Visualização de TTD implementada
     - Atualizada exportação .CSV para suportar Modulo TTD
 
+- versão 0.3:
+    - Mudanças na interface de usuário
+        * Removida tela de exportação, agora exporta diretamente da tela principal
+        * Botões do menu foram movidos para a tela principal
+    - Melhorias para passar caminhos (paths), agora suporta execução em windows
+
 - Futuras versões:
     - Implementar pesquisa de dados para facilitar navegação em árvore
     - Implementar um campo para o usuário fornecer um nome ao repositório
@@ -23,7 +29,7 @@ Email do grupo de pesquisa: cnpqdocsdigitais@gmail.com
 Link do projeto no GitHub: (https://github.com/MBaumgartenBR/ElPCD)
 Link para contato: (https://twitter.com/mbaumgartenbr)
 
-Para rodar o projeto no seu ambiente de desenvolvimento (assumindo que já possua python,pip,virtualenv instalados):
+Para rodar o projeto no seu ambiente de desenvolvimento (assumindo que já possua as versões mais recentes do python, pip e virtualenv).
 Clone o repositório do projeto:
 ```bash
 git clone https://github.com/MBaumgartenBR/ElPCD.git
@@ -53,7 +59,7 @@ Instale o KivyMD:
 pip3 install git+https://github.com/HeaTTheatR/KivyMD.git
 ```
 Tudo pronto para modificar quaisquer arquivos que desejar.
-# Para executar a aplicação:
+- Para executar a aplicação:
 ```bash
 python3 main.py
 ```
