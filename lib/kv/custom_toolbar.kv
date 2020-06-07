@@ -1,0 +1,31 @@
+#:kivy 1.11.1
+<CustomToolbar@MDBoxLayout>:
+    size_hint_y: None
+    height: dp(50)
+    md_bg_color: app.theme_cls.primary_dark
+    MDTooltipIconButton:
+        icon: 'delete'
+        text_color: (1,0,0,1)
+        tooltip_text: 'Eliminar PCD'
+        on_release: delete_dialog()
+    MDTooltipIconButton:
+        icon: 'facebook'
+        tooltip_text: 'Facebook do Grupo'
+        on_release: open_social_media('facebook')
+    MDTooltipIconButton:
+        icon: 'blogger'
+        tooltip_text: 'Blogger do Grupo'
+        on_release: open_social_media('blogger')
+    Widget:
+    MDTooltipIconButton:
+        icon: 'file-export-outline'
+        tooltip_text: 'Exportar Dados em .CSV'
+        on_release: app.main_frame.open_export_dialog()
+    MDTooltipIconButton:
+        icon: 'file-import-outline'
+        tooltip_text:'Importar Dados'
+        on_release: toast('Importação ainda não implementada')
+    MDTooltipIconButton:
+        icon: 'calendar-clock'
+        tooltip_text: 'Visualizar TTD'
+        on_release: app.main_frame.switch_to_screen('viewttd')
