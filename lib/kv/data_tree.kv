@@ -6,12 +6,11 @@
     shorten: True
     height: dp(25)
     size_hint_y: None
-    font_style: 'Button'
     theme_text_color: 'Custom'
     color_selected: (1,1,1,.5)
     text_size: self.texture_size
     text_color: app.theme_cls.bg_light
-    odd_color: app.theme_cls.primary_dark
+    odd_color: app.theme_cls.primary_color
     even_color: app.theme_cls.primary_color
 <DataTree>:
     orientation: 'vertical'
@@ -20,7 +19,7 @@
         do_scroll_y: True
         canvas.before:
             Color:
-                rgba: app.theme_cls.primary_dark
+                rgba: app.theme_cls.primary_color
             Rectangle:
                 size: self.size
                 pos: self.pos
