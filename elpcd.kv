@@ -11,32 +11,19 @@
         MDScreen:
             name: "welcome"
             MDBoxLayout:
-                padding: (dp(100),dp(200))
-                orientation: 'vertical'
-                md_bg_color: app.theme_cls.primary_dark
-                MDRoundFlatButton:
-                    text: f'[b]Bem-vindo ao [i]El PCD[/i][/b]'
-                    markup: True
-                    size_hint: 1, 1
-                    halign: 'center'
-                    font_size: '96sp'
-                    md_bg_color: app.theme_cls.bg_light
-                    text_color: app.theme_cls.primary_dark
-                    on_release: screen_manager.current = 'pcd'
+                md_bg_color: app.theme_cls.bg_light
+                Logo:
+                    id: logo
+                    on_press:
+                        root.switch_to_screen('pcd',duration=5.)
+                        app.welcome_event.cancel()
         MDScreen:
             name: "pcd"
             MDBoxLayout:
                 orientation: 'vertical'
                 md_bg_color: app.theme_cls.bg_light
-                MDToolbar:
-                    title: "Menu"
-                    elevation: 10
-                    height: dp(50)
-                    theme_text_color: 'Custom'
-                    specific_text_color: app.theme_cls.bg_light
-                    md_bg_color: app.theme_cls.primary_dark
-                    left_action_items: [['menu', lambda x: nav_drawer.set_state()]]
-                    right_action_items: [['magnify', lambda x: toast('Pesquisa ainda não implementada',1.5)]]
+                CustomToolbar:
+                    id: custom_toolbar
                 MDBoxLayout:
                     orientation: 'horizontal'
                     MDBoxLayout:
@@ -56,30 +43,10 @@
                             orientation: 'vertical'
                             md_bg_color: app.theme_cls.bg_darkest
         MDScreen:
-            name: "export"
-            on_pre_enter:
-                app.export_data.data_tree.regen_tree()
-                app.export_data.switch_button(reset=True)
-            MDBoxLayout:
-                orientation: 'vertical'
-                md_bg_color: app.theme_cls.bg_light
-                MDToolbar:
-                    id: toolbar
-                    title: "Menu"
-                    elevation: 10
-                    height: dp(50)
-                    theme_text_color: 'Custom'
-                    specific_text_color: app.theme_cls.bg_light
-                    md_bg_color: app.theme_cls.primary_dark
-                    left_action_items: [['menu', lambda x: nav_drawer.set_state()]]
-                MDBoxLayout:
-                    id: export_frame
-                    orientation: 'vertical'
-                    md_bg_color: app.theme_cls.bg_light
-        MDScreen:
             name: "viewttd"
             on_pre_enter: view_ttd()
             md_bg_color: app.theme_cls.primary_dark
 
-    DrawerContent:
-        id: nav_drawer
+<Logo@ButtonBehavior+Image+Widget>:
+    source: app.LOGO
+    pos_hint: {'center_x': .5, 'center_y': .5}
