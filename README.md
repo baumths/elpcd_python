@@ -1,4 +1,4 @@
-# ElPCD BETA 0.2
+# ElPCD BETA 0.3
 Elaborador de Plano de Classificação de Documentos e Tabela de Temporalidade Documental
 
 - versão 0.1:
