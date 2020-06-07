@@ -20,9 +20,10 @@
     color: app.theme_cls.bg_light
     background_color: app.theme_cls.primary_dark if self.state == 'down' else app.theme_cls.primary_light
 <DataManagement>:
-    orientation: 'vertical'
     size_hint: 1,1
     spacing: dp(10)
+    orientation: 'vertical'
+    md_bg_color: app.theme_cls.bg_darkest
     ScrollView:
         bar_width: dp(5)
         do_scroll: False, True
