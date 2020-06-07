@@ -117,11 +117,13 @@ if __name__ == "__main__":
         from kivy.resources import resource_add_path
         os.environ["ELPCD_ROOT"] = sys._MEIPASS
         resource_add_path(os.environ["ELPCD_ROOT"])
+
+        Builder.load_file(os.path.join(os.environ["ELPCD_ROOT"],'elpcd.kv'))
     else:
         os.environ["ELPCD_ROOT"] = os.path.dirname(os.path.abspath(__file__))
 
-    Builder.load_file(f'{os.environ["ELPCD_ROOT"]}{os.sep}elpcd.kv')
-    for item in os.listdir(f'{os.environ["ELPCD_ROOT"]}{os.sep}lib{os.sep}kv{os.sep}'):
-        Builder.load_file(f'{os.environ["ELPCD_ROOT"]}{os.sep}lib{os.sep}kv{os.sep}{item}')
+    kv_files_dir = os.path.join(os.environ["ELPCD_ROOT"],'lib','kv')
+    for item in os.listdir(kv_files_dir):
+        Builder.load_file(os.path.join(kv_files_dir, item))
 
     ElPCD().run()
