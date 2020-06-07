@@ -151,8 +151,6 @@ if __name__ == "__main__":
         from kivy.resources import resource_add_path
         os.environ["ELPCD_ROOT"] = sys._MEIPASS
         resource_add_path(os.environ["ELPCD_ROOT"])
-
-        Builder.load_file(os.path.join(os.environ["ELPCD_ROOT"],'elpcd.kv'))
     else:
         os.environ["ELPCD_ROOT"] = os.path.dirname(os.path.abspath(__file__))
 
