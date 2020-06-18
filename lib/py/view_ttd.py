@@ -1,4 +1,5 @@
 from kivymd.uix.datatables import MDDataTable
+from kivy.core.window import Window
 from kivymd.app import MDApp
 from kivy.metrics import dp
 
@@ -25,7 +26,7 @@ def view_ttd():
                 ("Fase Intermediária", dp(40)),
                 ("Destinação Final", dp(30))
             ],
-            rows_num= 999,
+            rows_num= len(table_data) if len(table_data) > 0 else 1,
             row_data=table_data
         )
     datatable.bind(on_dismiss= lambda *x: app.main_frame.switch_to_screen('pcd'))

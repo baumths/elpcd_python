@@ -15,6 +15,7 @@ from kivy.lang import Builder
 from kivymd.app import MDApp
 from kivy.clock import Clock
 
+from kivy.resources import resource_add_path
 import kivy.properties as prop
 
 from lib.py.data_management import DataManagement
@@ -104,9 +105,9 @@ class ElPCD(MDApp):
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        ## Load logo image \/
+        ## Presets \/
+        self.icon = os.path.join(os.environ['ELPCD_ROOT'],'assets','icons','elpcd192x.png')
         self.LOGO = os.path.join(os.environ["ELPCD_ROOT"],'assets','gedalogo2020.png')
-        ## Sets app themming \/
         self.theme_cls.primary_palette = "Indigo"
         self.theme_cls.accent_palette = "Gray"
         ## Sets Sqlite connection and cursor \/
@@ -131,10 +132,9 @@ class ElPCD(MDApp):
         self.main_frame.ids.data_frame.add_widget(self.data_management)
 
     def on_start(self):
-        def dismiss_welcome(*args):
-            """Switch off of welcome screen"""
-            self.main_frame.switch_to_screen('pcd',duration=5.)
-        self.welcome_event = Clock.schedule_once(dismiss_welcome,5) ## Switches after 5 seconds
+        ## Switch off of welcome screen \/
+        dismiss_welcome = lambda *x: self.main_frame.switch_to_screen('pcd',duration=5.)
+        self.welcome_event = Clock.schedule_once(dismiss_welcome,3)
 
     def on_stop(self):
         ## Close Sqlite connection \/
@@ -148,11 +148,11 @@ class ElPCD(MDApp):
 if __name__ == "__main__":
 
     if hasattr(sys, "_MEIPASS"):
-        from kivy.resources import resource_add_path
         os.environ["ELPCD_ROOT"] = sys._MEIPASS
-        resource_add_path(os.environ["ELPCD_ROOT"])
     else:
         os.environ["ELPCD_ROOT"] = os.path.dirname(os.path.abspath(__file__))
+    
+    resource_add_path(os.environ["ELPCD_ROOT"])
 
     kv_files_dir = os.path.join(os.environ["ELPCD_ROOT"],'lib','kv')
     for item in os.listdir(kv_files_dir):

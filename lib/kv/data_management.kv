@@ -48,6 +48,7 @@
                     text: cls_nome.text if not root.new_cls else 'Adicionando nova Classe'
                     markup: True
                     shorten: True
+                    shorten_from: 'right'
                     font_style: 'H4'
                     color: app.theme_cls.primary_dark
 
@@ -125,8 +126,9 @@
                 padding: [0,0,0,dp(10)]
                 AddMDTextField:
                     disabled: True
-                    hint_text: 'Indicador de Classe Ativa/Inativa'
                     size_hint_x: 1
+                    pos_hint: {'center_y':.47}
+                    hint_text: 'Indicador de Classe Ativa/Inativa' if self.size[0] > self.parent.width/2 else 'Indicador\nde Classe:'
                 MDBoxLayout:
                     width: dp(250)
                     spacing: dp(20)
@@ -157,7 +159,9 @@
                     color: app.theme_cls.primary_dark
                 MDLabel:
                     text: 'Temporalidade Documental'
+                    shorten: True
                     font_size: sp(30)
+                    shorten_from: 'right'
                     color: app.theme_cls.primary_dark
             AddMDTextField:
                 id: fase_corrente
@@ -189,8 +193,9 @@
                 height: dp(50)
                 AddMDTextField:
                     disabled: True
-                    hint_text: 'Destinação Final'
                     size_hint_x: 1
+                    pos_hint: {'center_y':.47}
+                    hint_text: 'Destinação Final' if self.size[0] > self.parent.width/3 else 'Destinação\nFinal'
                 MDBoxLayout:
                     width: dp(250)
                     spacing: dp(20)
