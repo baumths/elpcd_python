@@ -1,12 +1,11 @@
 from kivymd.app import MDApp
 
 from datetime import datetime
-from pathlib import Path
 import csv
-import os
 
 import lib.gen_ref_code
 import lib.utils
+import lib.paths
 
 class ExportCSV:
     """Export .csv object"""
@@ -14,15 +13,13 @@ class ExportCSV:
     ## Place holders \/
     app = None ## Main APP reference
     name = None ## name for file
-    new_file = None ## file path + name
-    _datetime = None ## time and date
-    _file_name = None ## name of the file
-    _file_path = None ## path to file
+    path_to_file = None ## file path + name
+    exports_directory = None ## directory to export files
 
     def __init__(self, name='PCD'):
         self.app = MDApp.get_running_app() ## App object reference
         self.name = name
-        self._file_path = self.set_path('ElPCD_Exports') ## create exports directory
+        self.exports_directory = self.create_path()
 
     def export_data(self):
         """Exports data to .csv file"""
@@ -30,10 +27,9 @@ class ExportCSV:
         table = self._add_ref_code(table) ## adds reference codes for each row
         repository = self.create_repository_row() ## create repo tupple
         try:
-            ## tries to write data to file 
-            self.set_file_name()
-            self.new_file = self.get_path()+self.get_file_name() ## sets file path + name 
-            with open(self.new_file, 'w') as file:
+            self.path_to_file = self.gen_path_to_file() ## returns file path 
+            ## tries to write data to file \/
+            with open(self.path_to_file, 'w') as file:
                 write = csv.writer(file, lineterminator='\n')
                 write.writerow(description) ## write headers
                 write.writerow(repository) ## write repo line
@@ -41,12 +37,10 @@ class ExportCSV:
         except:
             raise lib.utils.NotAbleToWriteFile()
 
-    def get_datetime(self):
-        """Get current date and time"""
-        return datetime.now().strftime('%d-%m-%Y_%H:%M:%S')
 
     def create_repository_row(self):
-        """Create repo row, user will be to change repo name in the future 
+        """Create repo row, user will be able
+        to change repo name in the future 
         :return: tupple"""
         ## Repo constant in main app object \/
         repo = (
@@ -61,8 +55,9 @@ class ExportCSV:
         return repo
 
     def fetch_data(self):
-        """Fetches data from database to accesstomemory.org importing standards 
-        returns tupple of (description,table) lists
+        """Fetches data from database to
+        accesstomemory.org importing standards 
+        returns a tupple of `(description,table)`
         :return: tupple"""
         self.app.cursor.execute('''
         SELECT '' as referenceCode, legacyId, parentId,
@@ -92,8 +87,9 @@ class ExportCSV:
         description = [ col[0] for col in self.app.cursor.description]
         return description,table
 
-    def _add_ref_code(self,table):
-        """Generates reference codes for each row in database table 
+    def _add_ref_code(self, table):
+        """Generates reference codes
+        for each row in database table 
         :param table: list
         :return: list"""
         ref_codes = lib.gen_ref_code.generate_reference_codes()
@@ -104,23 +100,28 @@ class ExportCSV:
                     ref_codes.remove(code)
         return table
 
-    def set_path(self, directory):
-        """Creates folder inside working directory and set path to current folder
-        :param directory: str
+    def get_datetime(self):
+        """Returns current date and time
         :return: str"""
-        path = Path(f'.{os.sep}{directory}')
-        path.mkdir(parents=True, exist_ok=True)
-        return str(path.resolve()) + os.sep
+        return datetime.now().strftime('%d-%m-%Y_%Hh%Mmin%Ss')
+    
+    def create_path(self):
+        """Creates the exports directory
+        and returns a path object
+        :return: obj"""
+        dir_path = lib.paths.CWD / 'ElPCD_Exports' ## creates path object
+        dir_path.mkdir(parents=True, exist_ok=True) ## creates folder if not exists
+        return dir_path
+    
+    def gen_path_to_file(self):
+        """Creates the name and returns
+        the full path to a new file
+        :return: str"""
+        file_name = f'{self.name}_{self.get_datetime()}.csv' ## creates file name
+        full_path = self.exports_directory / file_name ## joins path and file name togheter
+        return str(full_path.resolve())
     
     def get_path(self):
-        """File path getter
+        """Returns path to exports folder
         :return: str"""
-        return str(self._file_path)
-    
-    def set_file_name(self):
-        """File name setter"""
-        self._file_name = f'{self.name}_{self.get_datetime()}.csv'
-    
-    def get_file_name(self):
-        """File name getter"""
-        return str(self._file_name)
+        return str(self.exports_directory.resolve())
