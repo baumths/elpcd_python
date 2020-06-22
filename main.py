@@ -3,8 +3,25 @@ Config.set('kivy', 'exit_on_escape', '0') ## Disable closing app on escape
 Config.set('graphics', 'window_state', 'maximized') ## Set screen to Maximized
 Config.set('input', 'mouse', 'mouse,multitouch_on_demand') ## Turns off red circles on left click
 
-from pathlib import Path
-import sqlite3, sys, os
+try:
+    from kivy.resources import resource_add_path
+    from pathlib import Path, PurePath
+    import sys, os
+
+    if hasattr(sys, "_MEIPASS"): ## App is frozen
+            ## Bundle with PyInstaller
+            os.environ["ELPCD_ROOT"] = sys._MEIPASS
+    else:
+        ## If app is NOT frozen, the path is set to the parent of this file
+        os.environ["ELPCD_ROOT"] = str(PurePath(Path(__file__).resolve()).parent)
+
+    resource_add_path(os.environ["ELPCD_ROOT"]) ## Add path to kivy resources
+except:
+    quit()
+else:
+    import lib.paths
+    Config.set('kivy', 'window_icon', lib.paths.ICON)
+
 from kivy.uix.screenmanager import ScreenManager, FadeTransition
 from kivymd.uix.button import MDFlatButton, MDRaisedButton
 from kivymd.uix.boxlayout import MDBoxLayout
@@ -15,22 +32,12 @@ from kivy.lang import Builder
 from kivymd.app import MDApp
 from kivy.clock import Clock
 
-from kivy.resources import resource_add_path
 import kivy.properties as prop
 
 from lib.py.data_management import DataManagement
 from lib.csv_export import ExportCSV
 from lib.py.pcd_tree import PCDTree
 import lib.data_cls
-
-def set_path(directory=''):
-    """Sets path to current folder, if directory specified, creates folder inside working directory
-    :param directory: str
-    :return: str"""
-    path = Path(f".{os.sep}{directory}")
-    if directory != '':
-        path.mkdir(parents=True, exist_ok=True)
-    return str(path.resolve())
 
 class MainFrame(MDBoxLayout):
     """Main Frame of the application"""
@@ -62,7 +69,7 @@ class MainFrame(MDBoxLayout):
         else:
             ## shows snackbar with path to new .csv file
             self.export_dialog.dismiss()
-            snackbar = Snackbar(text=f'PCD exportado para {self.export.new_file}',duration=10)
+            snackbar = Snackbar(text=f'PCD exportado para {self.export.path_to_file}',duration=10)
             snackbar.show()
 
     def confirm_export_dialog(self):
@@ -71,7 +78,7 @@ class MainFrame(MDBoxLayout):
         btn_confirm = MDRaisedButton(text= 'Exportar .CSV',elevation= 11,on_release= self._export_csv)
         self.export_dialog = MDDialog(
             title= 'Deseja exportar seu PCD?',
-            text= f'Salvando em {self.export.get_path()}',
+            text= f'O arquivo será salvo em\n{self.export.get_path()}',
             auto_dismiss= False,
             buttons= [btn_cancel,btn_confirm])
         self.export_dialog.buttons[0].bind(on_release= self.export_dialog.dismiss)
@@ -94,7 +101,7 @@ class ElPCD(MDApp):
 
     ## Repository name, user will be able to change in the future \/
     REPOSITORY = prop.StringProperty('ElPCD')
-    LOGO = prop.StringProperty()
+    LOGO = prop.StringProperty(lib.paths.LOGO)
 
     ## Place holders for APP objects \/
     cursor = prop.ObjectProperty() ## Sqlite cursor
@@ -105,16 +112,18 @@ class ElPCD(MDApp):
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        ## Presets \/
-        self.icon = os.path.join(os.environ['ELPCD_ROOT'],'assets','icons','elpcd192x.png')
-        self.LOGO = os.path.join(os.environ["ELPCD_ROOT"],'assets','gedalogo2020.png')
+        ## Theming \/
         self.theme_cls.primary_palette = "Indigo"
         self.theme_cls.accent_palette = "Gray"
-        ## Sets Sqlite connection and cursor \/
-        self.connection = sqlite3.connect(os.path.join(set_path("data"),'database.db'))
-        self.cursor = self.connection.cursor()
-        ## Sets up table PCD in sqlite \/
-        lib.data_cls.create_tables()
+        ## Tries to set Sqlite connection and cursor \/
+        try:
+            import sqlite3
+            self.connection = sqlite3.connect(str(Path(self.user_data_dir) / 'database.db'))
+            self.cursor = self.connection.cursor()
+            ## Sets up table PCD in sqlite \/
+            lib.data_cls.create_tables()
+        except:
+            self.stop()
         ## Instantiation of TreeView objects \/
         self.pcd_tree = PCDTree()
 
@@ -140,22 +149,18 @@ class ElPCD(MDApp):
         ## Close Sqlite connection \/
         self.connection.close()
 
+    def open_settings(self, *args):
+        """Override to disable settings panel opening"""
+        return False
+
     def build(self):
         """Main APP builder"""
         self.main_frame = MainFrame() ## Main Frame object
         return self.main_frame
 
 if __name__ == "__main__":
-
-    if hasattr(sys, "_MEIPASS"):
-        os.environ["ELPCD_ROOT"] = sys._MEIPASS
-    else:
-        os.environ["ELPCD_ROOT"] = os.path.dirname(os.path.abspath(__file__))
-    
-    resource_add_path(os.environ["ELPCD_ROOT"])
-
-    kv_files_dir = os.path.join(os.environ["ELPCD_ROOT"],'lib','kv')
-    for item in os.listdir(kv_files_dir):
-        Builder.load_file(os.path.join(kv_files_dir, item))
-
+    ## Load .kv files
+    for item in lib.paths.KV.iterdir():
+        Builder.load_file(str((lib.paths.KV / item).resolve()))
+    ## Execute app
     ElPCD().run()
