@@ -1,3 +1,10 @@
+from platform import system
+import os
+
+if system() == 'Windows':
+    ## Needed to run the application if user have OpenGL < v2.0
+    os.environ['KIVY_GL_BACKEND'] = 'angle_sdl2'
+
 from kivy.config import Config
 Config.set('kivy', 'exit_on_escape', '0') ## Disable closing app on escape
 Config.set('graphics', 'window_state', 'maximized') ## Set screen to Maximized
@@ -6,11 +13,11 @@ Config.set('input', 'mouse', 'mouse,multitouch_on_demand') ## Turns off red circ
 try:
     from kivy.resources import resource_add_path
     from pathlib import Path, PurePath
-    import sys, os
+    import sys
 
     if hasattr(sys, "_MEIPASS"): ## App is frozen
-            ## Bundle with PyInstaller
-            os.environ["ELPCD_ROOT"] = sys._MEIPASS
+        ## Bundle with PyInstaller
+        os.environ["ELPCD_ROOT"] = sys._MEIPASS
     else:
         ## If app is NOT frozen, the path is set to the parent of this file
         os.environ["ELPCD_ROOT"] = str(PurePath(Path(__file__).resolve()).parent)
@@ -118,7 +125,7 @@ class ElPCD(MDApp):
         ## Tries to set Sqlite connection and cursor \/
         try:
             import sqlite3
-            self.connection = sqlite3.connect(str(Path(self.user_data_dir) / 'database.db'))
+            self.connection = sqlite3.connect(str((Path(self.user_data_dir) / 'database.db').resolve()))
             self.cursor = self.connection.cursor()
             ## Sets up table PCD in sqlite \/
             lib.data_cls.create_tables()
@@ -129,9 +136,9 @@ class ElPCD(MDApp):
 
     def set_data_management_widget(self, view_only=True,item_data=None,new_cls=False):
         """Clear and add new Data Management object,
-        view_only locks the text fields,
-        item_data contains from the database,
-        new_cls creates an item without any parents. 
+        `view_only` locks the text fields,
+        `item_data` stores database row,
+        `new_cls` creates an item without any parents. 
         :param view_only: bool
         :param item_data: dict
         :param new_cls: bool
