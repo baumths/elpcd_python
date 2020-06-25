@@ -2,7 +2,7 @@
 <CustomToolbar@MDBoxLayout>:
     size_hint_y: None
     height: dp(50)
-    md_bg_color: app.theme_cls.primary_dark
+    md_bg_color: app.theme_cls.primary_color
     MDTooltipIconButton:
         icon: 'delete'
         text_color: (1,0,0,1)
@@ -20,12 +20,12 @@
     MDTooltipIconButton:
         icon: 'calendar-clock'
         tooltip_text: 'Visualizar TTD'
-        on_release: app.main_frame.switch_to_screen('viewttd')
+        on_release: app.root.switch_to_screen('viewttd')
     MDTooltipIconButton:
         icon: 'file-import-outline'
         tooltip_text:'Importar Dados'
-        on_release: toast('Importação ainda não implementada')
+        on_release: toast('Importação ainda não implementada', 1.5)
     MDTooltipIconButton:
         icon: 'file-export-outline'
         tooltip_text: 'Exportar Dados em .CSV'
-        on_release: app.main_frame.open_export_dialog()
+        on_release: app.root.open_export_dialog()

@@ -1,0 +1,70 @@
+#:kivy 1.11.1
+<SearchNode>:
+    adaptive_height: True
+    orientation: 'vertical'
+    md_bg_color: app.theme_cls.bg_light
+    on_release: root.search_frame.node_callback(root)
+    MDBoxLayout:
+        padding: [dp(5), 0, dp(10), 0]
+        adaptive_height: True
+        orientation: 'vertical'
+        MDLabel:
+            text: root.codigo_ref
+            shorten: True
+            height: dp(27)
+            font_style: 'H6'
+            size_hint_y: None
+            shorten_from: 'right'
+            theme_text_color: 'Custom'
+            text_color: app.theme_cls.primary_color
+        MDLabel:
+            text: root.cls_nome
+            shorten: True
+            height: dp(27)
+            size_hint_y: None
+            shorten_from: 'right'
+            theme_text_color: 'Hint'
+            font_style: 'Subtitle1'
+            font_size: sp(16)
+    MDSeparator:
+        size_hint_y: None
+        height: dp(2)
+        color: (.8,.8,.8,.8)
+
+<SearchFrame>:
+    height: dp(438)
+    size_hint_y: None
+    orientation: 'vertical'
+    MDTextField:
+        id: to_search
+        icon_right: 'magnify'
+        unfocus_on_touch: False
+        text_validate_unfocus: False
+        hint_text: 'Encontar Classe . . .'
+        icon_right_color: app.theme_cls.primary_color
+        on_text: root.find_nodes(self.text)
+    RecycleView:
+        id: search_results
+        viewclass: 'SearchNode'
+        bar_width: dp(15)
+        do_scroll_x: False
+        scroll_type: ['bars','content']
+        RecycleBoxLayout:
+            size_hint_y: None
+            orientation: 'vertical'
+            default_size_hint: 1, None
+            default_size: None, dp(56)
+            height: self.minimum_height
+    MDBoxLayout:
+        adaptive_height: True
+        MDTooltipIconButton:
+            icon: 'arrow-left'
+            hint_text: 'Fechar'
+            pos_hint: {'left': 1}
+            text_color: [1,0,0,1]
+            on_release: root.pcd_tree.dialog.dismiss()
+        MDLabel:
+            text: 'Pesquise pelo nome ou código da Classe desejada'
+            theme_text_color: 'Hint'
+            font_size: sp(14)
+            halign: 'right'

@@ -1,13 +1,16 @@
 #:kivy 1.11.1
+#:import MDToggleButton kivymd.uix.behaviors.toggle_behavior.MDToggleButton
 <DataMDRaisedButton@MDRaisedButton>:
     elevation: 10
     text_color: app.theme_cls.bg_light
-    md_bg_color: app.theme_cls.primary_dark
+    md_bg_color: app.theme_cls.primary_color
     pos_hint: {'center_x': .5, 'center_y': .5}
+
 <AddMDTextField@MDTextField>:
     write_tab: False
     size_hint_y: None
     height: dp(40)
+
 <CustomTB@Button+ToggleButtonBehavior>:
     width: dp(115)
     size_hint: None,.75
@@ -17,17 +20,19 @@
     background_normal: ''
     background_disabled_down: ''
     background_disabled_normal: ''
-    color: app.theme_cls.bg_light
-    background_color: app.theme_cls.primary_dark if self.state == 'down' else app.theme_cls.primary_light
+    disabled_color: [0, 0, 0, .7] if self.state == 'normal' else app.theme_cls.bg_light if not self.disabled else [0, 0, 0, .7]
+    color: app.theme_cls.bg_light if self.state == 'down' else [0, 0, 0, .7] 
+    background_color: [.5, .5, .5, .3] if self.state == 'normal' else app.theme_cls.primary_color if not self.disabled else app.theme_cls.primary_light
+
 <DataManagement>:
     size_hint: 1,1
     spacing: dp(10)
     orientation: 'vertical'
     md_bg_color: app.theme_cls.bg_darkest
     ScrollView:
-        bar_width: dp(5)
+        bar_width: dp(15)
         do_scroll: False, True
-        scroll_wheel_distance: '800px'
+        scroll_type: ['bars','content']
         MDBoxLayout:
             padding: (dp(50),0)
             adaptive_height: True
@@ -42,15 +47,15 @@
                     size_hint: None,None
                     size: dp(30),dp(30)
                     pos_hint: {'center_y':.5}
-                    color: app.theme_cls.primary_dark if not root.view_only else (1,0,0,1)
+                    color: app.theme_cls.primary_color if not root.view_only else (1,0,0,1)
                 MDLabel:
                     id: add_label
-                    text: cls_nome.text if not root.new_cls else 'Adicionando nova Classe'
+                    text: str('[b]Visualizando[/b] '+cls_nome.text) if root.view_only else 'Adicionando nova Classe' if root.new_cls else str('[b]Editando[/b] '+cls_nome.text)
                     markup: True
                     shorten: True
                     shorten_from: 'right'
                     font_style: 'H4'
-                    color: app.theme_cls.primary_dark
+                    color: app.theme_cls.primary_color
 
             AddMDTextField:
                 id: cls_nome
@@ -146,7 +151,7 @@
                         disabled: root.view_only
             MDSeparator:
                 height: dp(2.5)
-                color: app.theme_cls.primary_dark
+                color: app.theme_cls.primary_color
             MDBoxLayout:
                 size_hint_y: None
                 height: dp(60)
@@ -156,13 +161,13 @@
                     size_hint: None,None
                     size: dp(30),dp(30)
                     pos_hint: {'center_y':.5}
-                    color: app.theme_cls.primary_dark
+                    color: app.theme_cls.primary_color
                 MDLabel:
                     text: 'Temporalidade Documental'
                     shorten: True
                     font_size: sp(30)
                     shorten_from: 'right'
-                    color: app.theme_cls.primary_dark
+                    color: app.theme_cls.primary_color
             AddMDTextField:
                 id: fase_corrente
                 multiline: False
@@ -223,7 +228,7 @@
                 hint_text: 'Observações'
             MDSeparator:
                 height: dp(2.5)
-                color: app.theme_cls.primary_dark
+                color: app.theme_cls.primary_color
             MDSeparator:
                 height: dp(2.5)
                 color: (0,0,0,0)
@@ -245,7 +250,10 @@
         size_hint: .7,1
     DataMDRaisedButton:
         text: 'Cancelar'
-        on_release: app.main_frame.ids.data_frame.clear_widgets()
+        on_release:
+            app.root.ids.data_frame.clear_widgets()
+            app.pcd_tree.ids.treeview.deselect_node()
+            app.pcd_tree.disabled = False
 
 <ViewButtons>:
     spacing: dp(5)
@@ -257,7 +265,7 @@
         on_release: app.data_management.enable_edit()
     DataMDRaisedButton:
         text: 'Adicionar Novo'
-        on_release: app.set_data_management_widget(view_only=False,item_data=app.data_management.item_data,new_cls=False)
+        on_release: root.add_btn_callback()
     MDLabel:
         size_hint: .4,1
     MDTooltipIconButton:
@@ -268,5 +276,7 @@
         tooltip_text: 'Apagar Registro'
         on_release: app.data_management.show_delete_dialog()
     DataMDRaisedButton:
-        text: 'Cancelar'
-        on_release: app.main_frame.ids.data_frame.clear_widgets()
+        text: 'Fechar'
+        on_release:
+            app.root.ids.data_frame.clear_widgets()
+            app.pcd_tree.ids.treeview.deselect_node()

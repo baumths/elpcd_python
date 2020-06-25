@@ -18,16 +18,16 @@ def view_ttd():
         item['dest_final']) for item in data ]
 
     datatable = MDDataTable(
-            size_hint=(0.95, 0.9),
-            column_data= [
+            size_hint = (0.95, 0.9),
+            column_data = [
                 ("Código de Referência", dp(40)),
                 ("Nome da Classe", dp(95)),
                 ("Fase Corrente", dp(30)),
                 ("Fase Intermediária", dp(40)),
                 ("Destinação Final", dp(30))
             ],
-            rows_num= len(table_data) if len(table_data) > 0 else 1,
-            row_data=table_data
+            rows_num = len(table_data) if len(table_data) > 0 else 1,
+            row_data = table_data
         )
-    datatable.bind(on_dismiss= lambda *x: app.main_frame.switch_to_screen('pcd'))
+    datatable.bind(on_dismiss= lambda *x: app.root.switch_to_screen('pcd'))
     datatable.open()

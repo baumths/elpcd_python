@@ -59,12 +59,13 @@ class MainFrame(MDBoxLayout):
         ## Add standard widgets to main frame \/
         self.ids.tree_frame.add_widget(self.app.pcd_tree)
 
-    def switch_to_screen(self,screen,duration=0.2):
+    def switch_to_screen(self, screen, duration=0.2):
         """Switch to screen
         :param screen: str
         :param duration: float
         """
-        self.ids.screen_manager.current = screen
+        screen = self.ids.screen_manager.get_screen(screen)
+        self.ids.screen_manager.switch_to(screen, duration=duration)
     
     def _export_csv(self, *args):
         """Callback for export dialog popup button"""
@@ -76,13 +77,24 @@ class MainFrame(MDBoxLayout):
         else:
             ## shows snackbar with path to new .csv file
             self.export_dialog.dismiss()
-            snackbar = Snackbar(text=f'PCD exportado para {self.export.path_to_file}',duration=10)
+            snackbar = Snackbar(
+                text=f'PCD exportado para {self.export.path_to_file}',
+                duration=10
+                )
             snackbar.show()
 
     def confirm_export_dialog(self):
         """Create and open export dialog popup"""
-        btn_cancel = MDFlatButton(text='Cancelar',theme_text_color='Custom',text_color= self.app.theme_cls.primary_dark)
-        btn_confirm = MDRaisedButton(text= 'Exportar .CSV',elevation= 11,on_release= self._export_csv)
+        btn_cancel = MDFlatButton(
+            text = 'Cancelar',
+            theme_text_color = 'Custom',
+            text_color = self.app.theme_cls.primary_color
+            )
+        btn_confirm = MDRaisedButton(
+            text= 'Exportar .CSV',
+            elevation= 11,
+            on_release= self._export_csv
+            )
         self.export_dialog = MDDialog(
             title= 'Deseja exportar seu PCD?',
             text= f'O arquivo será salvo em\n{self.export.get_path()}',
@@ -113,19 +125,20 @@ class ElPCD(MDApp):
     ## Place holders for APP objects \/
     cursor = prop.ObjectProperty() ## Sqlite cursor
     pcd_tree = prop.ObjectProperty() ## PCD TreeView + widgets object
-    main_frame = prop.ObjectProperty()  ## Main Frame object
     connection = prop.ObjectProperty() ## Sqlite connection
     data_management = prop.ObjectProperty() ## Data Management object, *text fields*
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         ## Theming \/
-        self.theme_cls.primary_palette = "Indigo"
+        self.theme_cls.primary_palette = "Blue"
         self.theme_cls.accent_palette = "Gray"
+        self.theme_cls.primary_hue = '900'
         ## Tries to set Sqlite connection and cursor \/
         try:
             import sqlite3
-            self.connection = sqlite3.connect(str((Path(self.user_data_dir) / 'database.db').resolve()))
+            db_path = Path(self.user_data_dir) / 'database.db'
+            self.connection = sqlite3.connect(str(db_path.resolve()))
             self.cursor = self.connection.cursor()
             ## Sets up table PCD in sqlite \/
             lib.data_cls.create_tables()
@@ -134,7 +147,7 @@ class ElPCD(MDApp):
         ## Instantiation of TreeView objects \/
         self.pcd_tree = PCDTree()
 
-    def set_data_management_widget(self, view_only=True,item_data=None,new_cls=False):
+    def set_data_management_widget(self, view_only=True, item_data=None, new_cls=False):
         """Clear and add new Data Management object,
         `view_only` locks the text fields,
         `item_data` stores database row,
@@ -143,14 +156,14 @@ class ElPCD(MDApp):
         :param item_data: dict
         :param new_cls: bool
         """
-        self.main_frame.ids.data_frame.clear_widgets()
+        self.root.ids.data_frame.clear_widgets()
         self.data_management = DataManagement(view_only=view_only,item_data=item_data,new_cls=new_cls)
-        self.main_frame.ids.data_frame.add_widget(self.data_management)
+        self.root.ids.data_frame.add_widget(self.data_management)
 
     def on_start(self):
         ## Switch off of welcome screen \/
-        dismiss_welcome = lambda *x: self.main_frame.switch_to_screen('pcd',duration=5.)
-        self.welcome_event = Clock.schedule_once(dismiss_welcome,3)
+        switch = lambda *_: self.root.switch_to_screen('pcd', duration = 1)
+        self.welcome_event = Clock.schedule_once(switch, 1.5)
 
     def on_stop(self):
         ## Close Sqlite connection \/
@@ -162,8 +175,7 @@ class ElPCD(MDApp):
 
     def build(self):
         """Main APP builder"""
-        self.main_frame = MainFrame() ## Main Frame object
-        return self.main_frame
+        return MainFrame() ## Main Frame object
 
 if __name__ == "__main__":
     ## Load .kv files

@@ -2,20 +2,32 @@
 #:import toast kivymd.toast.toast
 #:import view_ttd lib.py.view_ttd.view_ttd
 #:import open_social_media lib.utils.open_social_media
-#:import delete_dialog lib.delete_dialog.delete_dialog
+#:import delete_dialog lib.dialogs.delete_dialog
+<Logo@ButtonBehavior+Image+Widget>:
+    source: app.LOGO
+    pos_hint: {'center_x': .5, 'center_y': .5}
+
 <MainFrame>:
-    id: main_frame
     orientation: 'vertical'
     Manager:
         id: screen_manager
         MDScreen:
             name: "welcome"
+            md_bg_color: app.theme_cls.primary_color
             MDBoxLayout:
-                md_bg_color: app.theme_cls.bg_light
+                size_hint: (.6, .8)
+                orientation: 'vertical'
+                pos_hint: {'center_x': .5, 'center_y': .5}
+                canvas:
+                    Color:
+                        rgba: (1, 1, 1, 1)
+                    RoundedRectangle:
+                        size: self.size
+                        pos: self.pos
+                        radius: [40,]
                 Logo:
-                    id: logo
                     on_press:
-                        root.switch_to_screen('pcd',duration=5.)
+                        root.switch_to_screen('pcd', duration = .5)
                         app.welcome_event.cancel()
         MDScreen:
             name: "pcd"
@@ -45,8 +57,4 @@
         MDScreen:
             name: "viewttd"
             on_pre_enter: view_ttd()
-            md_bg_color: app.theme_cls.primary_dark
-
-<Logo@ButtonBehavior+Image+Widget>:
-    source: app.LOGO
-    pos_hint: {'center_x': .5, 'center_y': .5}
+            md_bg_color: app.theme_cls.primary_color

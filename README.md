@@ -1,4 +1,4 @@
-# ElPCD BETA 0.3
+# ElPCD BETA v0.4
 Elaborador de Plano de Classificação de Documentos e Tabela de Temporalidade Documental
 
 - versão 0.1:
@@ -15,6 +15,11 @@ Elaborador de Plano de Classificação de Documentos e Tabela de Temporalidade D
         * Removida tela de exportação, agora exporta diretamente da tela principal
         * Botões do menu foram movidos para a tela principal
     - Melhorias para passar caminhos (paths), agora suporta execução em windows
+
+- versão 0.4:
+    - Mudanças na interface de usuário
+    - Implementação da pesquisa de dados
+    - Alterado o Backend (de glew para angle) usado em WindowsOS
 
 - Futuras versões:
     - Implementar pesquisa de dados para facilitar navegação em árvore

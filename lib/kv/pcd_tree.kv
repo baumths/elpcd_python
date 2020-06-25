@@ -1,18 +1,42 @@
 #:kivy 1.11.1
+<MDTooltipIconButton@MDIconButton+MDTooltip>:
+    theme_text_color: 'Custom'
+    text_color:  app.theme_cls.bg_light
+
+<CustomTVLabel>:
+    shorten: True
+    height: dp(25)
+    size_hint_y: None
+    shorten_from: 'right'
+    theme_text_color: 'Custom'
+    color_selected: [1, 1, 1, .7]
+    text_size: self.texture_size
+    odd_color: app.theme_cls.primary_color
+    even_color: app.theme_cls.primary_color
+    text_color: app.theme_cls.bg_light if not self.is_selected else [0, 0, 0, 1]
+    on_enter:
+        self.odd_color = [.8, .8, .8, .2]
+        self.even_color = [.8, .8, .8, .2]
+        self.text_color = [0, 0, 0, 1] if not self.disabled else app.theme_cls.bg_light if not self.is_selected else [0, 0, 0, 1]
+    on_leave:
+        self.odd_color = app.theme_cls.primary_color
+        self.even_color = app.theme_cls.primary_color
+        self.text_color = app.theme_cls.bg_light if not self.is_selected else [0, 0, 0, 1]
+
 <PCDTree>:
     orientation: 'vertical'
     MDBoxLayout:
         height: dp(40)
         spacing: dp(5)
         size_hint_y: None
-        md_bg_color: app.theme_cls.primary_dark
+        md_bg_color: app.theme_cls.primary_color
         MDTooltipIconButton:
             icon: root.btn_icon[0]
             tooltip_text: root.btn_text[0]
             pos_hint: {'center_y':.5, 'center_x': .5}
             on_release:
                 root.switch_button()
-                root.data_tree.toggle_all_nodes()
+                root.toggle_all_nodes()
         MDLabel:
             size_hint_x: .7
             shorten: True
@@ -20,6 +44,12 @@
             text: '[FUNDO] ElPCD'
             theme_text_color: 'Custom'
             text_color: app.theme_cls.bg_light
+        MDTooltipIconButton:
+            icon: 'magnify'
+            tooltip_text: 'Encontrar Classe'
+            pos_hint: {'center_y':.5, 'center_x': .5}
+            on_press: root.search_widget.regen_search_data()
+            on_release: root.dialog.open()
         MDTooltipIconButton:
             icon: 'folder-plus-outline'
             tooltip_text: 'Nova Classe'
@@ -29,4 +59,20 @@
         height: dp(2.5)
         color: app.theme_cls.bg_light
     MDBoxLayout:
-        id: tree_frame
+        orientation: 'vertical'
+        ScrollView:
+            bar_width: dp(10)
+            do_scroll: False, True
+            scroll_type: ['bars','content']
+            canvas.before:
+                Color:
+                    rgba: app.theme_cls.primary_color
+                Rectangle:
+                    size: self.size
+                    pos: self.pos
+            TreeView:
+                id: treeview
+                hide_root: True
+                indent_level: 8
+                size_hint_y: None
+                height: self.minimum_height

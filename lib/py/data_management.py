@@ -1,3 +1,4 @@
+from kivymd.uix.behaviors.toggle_behavior import MDToggleButton
 from kivymd.uix.button import MDFlatButton, MDRaisedButton
 from kivymd.uix.boxlayout import MDBoxLayout
 from kivymd.uix.dialog import MDDialog
@@ -38,9 +39,10 @@ class DataManagement(MDBoxLayout):
         else:
             ## if not view_only tests for new item 
             if self.new_cls:
-                ## if new item, changes label icon and adds 'None' to parent code
+                ## if new item, changes label icon and adds 'None' to parent node
                 self.ids.label_icon.icon = 'folder-plus-outline'
-                self.ids.cls_sub.text = 'Nenhuma'
+                self.ids.cls_sub.text = '[ Fundo ]'
+                self.app.pcd_tree.disabled = True ## Locks treeview
             else:
                 ## if not new item, adds current item code as item parent
                 self.ids.cls_sub.text = self.item_data['cls_codigo']
@@ -57,9 +59,10 @@ class DataManagement(MDBoxLayout):
     def enable_edit(self):
         """Enables editing of text fields"""
         toast(f'Editando {self.item_data["cls_nome"][:40]}{" [...]" if len(self.item_data["cls_nome"]) > 40 else ""}',1)
-        self.ids.add_label.text = f'Editando [b]{self.item_data["cls_nome"]}[/b]'
+        self.ids.add_label.text = f'[b]Editando[/b] {self.item_data["cls_nome"]}'
         self.editing = True ## Enables editing
         self.view_only = False ## Disables view_only mode
+        self.app.pcd_tree.disabled = True ## Locks treeview
         self.add_buttons() ## Add new buttons
 
     def populate_fields(self):
@@ -67,7 +70,7 @@ class DataManagement(MDBoxLayout):
         self.ids.add_label.text = f'Visualizando [b]{self.item_data["cls_nome"]}[/b]'
         self.ids.cls_nome.text = str(self.item_data['cls_nome'])
         self.ids.cls_codigo.text = str(self.item_data['cls_codigo'])
-        self.ids.cls_sub.text = str(self.item_data['cls_sub']) if self.item_data['cls_sub'] != '' else 'Nenhuma'
+        self.ids.cls_sub.text = str(self.item_data['cls_sub']) if self.item_data['cls_sub'] != '' else '[ Fundo ]'
         self.ids.reg_abertura.text = str(self.item_data['reg_abertura'])
         self.ids.reg_desativacao.text = str(self.item_data['reg_desativacao'])
         self.ids.reg_reativacao.text = str(self.item_data['reg_reativacao'])
@@ -88,20 +91,20 @@ class DataManagement(MDBoxLayout):
     def show_delete_dialog(self):
         """Create and open delete dialog popup"""
         btn_cancel = MDFlatButton(
-            text='Cancelar',
-            theme_text_color='Custom',
-            text_color=self.app.theme_cls.primary_dark,
-            on_release= lambda x: self.delete_dialog.dismiss())
+            text = 'Cancelar',
+            theme_text_color = 'Custom',
+            text_color = self.app.theme_cls.primary_color,
+            on_release = lambda x: self.delete_dialog.dismiss())
         btn_confirm = MDRaisedButton(
-            text='Apagar',
-            elevation= 11,
-            on_release= lambda *x: (self.delete_item_from_db(), self.delete_dialog.dismiss()))
+            text = 'Apagar',
+            elevation = 11,
+            on_release = lambda *x: (self.delete_item_from_db(), self.delete_dialog.dismiss()))
 
         self.delete_dialog = MDDialog(
-            title='Deseja realmente apagar?',
-            text=f'{self.item_data["cls_nome"]}',
-            buttons=[btn_cancel,btn_confirm],
-            auto_dismiss=False)
+            title = 'Deseja realmente apagar?',
+            text = f'{self.item_data["cls_nome"]}',
+            buttons = [btn_cancel,btn_confirm],
+            auto_dismiss = False)
         self.delete_dialog.open()
     
     def delete_item_from_db(self):
@@ -111,9 +114,9 @@ class DataManagement(MDBoxLayout):
         except lib.utils.ItemHasChildren:
             toast('Classe possui dependentes! Impossível apagar.')
         else:
-            toast(f'{self.item_data["cls_nome"][:40]}{" [...]" if len(self.item_data["cls_nome"]) > 40 else ""} apagado com sucesso!')
-            self.app.main_frame.ids.data_frame.clear_widgets() ## clear data management frame
-            self.app.pcd_tree.data_tree.delete_node_from_tree() ## delete item from treeview
+            toast(f'{self.item_data["cls_nome"][:40]}{" [...]" if len(self.item_data["cls_nome"]) > 40 else ""} apagado com sucesso!',1)
+            self.app.root.ids.data_frame.clear_widgets() ## clear data management frame
+            self.app.pcd_tree.delete_node_from_tree() ## delete item from treeview
     
     def text_fields_into_dict(self):
         """Gets data from text fields into dict
@@ -157,9 +160,10 @@ class DataManagement(MDBoxLayout):
                 toast('Algo deu errado! Impossível salvar a Classe.')
             else:
                 toast('Classe salva com sucesso!',1)
-                self.app.main_frame.ids.data_frame.clear_widgets() ## clear data management frame 
-                self.app.pcd_tree.data_tree.regen_tree() ## Regenerates pcd treeview
+                self.app.root.ids.data_frame.clear_widgets() ## clear data management frame 
+                self.app.pcd_tree.regen_tree() ## Regenerates pcd treeview
                 self.app.pcd_tree.switch_button(reset=True) ## switch toggle nodes button
+                self.app.pcd_tree.disabled = False ## Unlocks treeview
         else:
             ## if required fields are empty
             toast('Campos obrigatórios estão em branco!')
@@ -172,6 +176,18 @@ class EditButtons(MDBoxLayout):
 
 class ViewButtons(MDBoxLayout):
     """Visualization buttons (edit, add_new, delete, cancel)"""
-    def __init__(self,edit_code='',**kwargs):
+
+    app = prop.ObjectProperty() ## App instance
+
+    def __init__(self, edit_code = '', **kwargs):
         super().__init__(**kwargs)
+        self.app = MDApp.get_running_app()
         self.ids.edit_btn.text = f'Editar [b]{edit_code}[/b]' ## sets edit button text
+
+    def add_btn_callback(self):
+        self.app.set_data_management_widget(
+            view_only = False,
+            item_data = self.app.data_management.item_data,
+            new_cls = False
+            )
+        self.app.pcd_tree.disabled = True ## Locks treeview
