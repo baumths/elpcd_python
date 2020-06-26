@@ -19,10 +19,9 @@ Elaborador de Plano de Classificação de Documentos e Tabela de Temporalidade D
 - versão 0.4:
     - Mudanças na interface de usuário
     - Implementação da pesquisa de dados
-    - Alterado o Backend (de glew para angle) usado em WindowsOS
+    - Alterado o Backend usado em WindowsOS (de glew para angle)
 
 - Futuras versões:
-    - Implementar pesquisa de dados para facilitar navegação em árvore
     - Implementar um campo para o usuário fornecer um nome ao repositório
     - Importação do PCD e TTD em .CSV
     - Importação e Exportação de .XML para os Modulos PCD e TTD
