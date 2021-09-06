@@ -1,4 +1,6 @@
-# ElPCD BETA v0.4
+# Site do novo app: https://elpcd.github.io/
+# Código fonte do novo app: https://github.com/mbaumgartenbr/elpcd
+
 Elaborador de Plano de Classificação de Documentos e Tabela de Temporalidade Documental
 
 - versão 0.1:
@@ -26,21 +28,19 @@ Elaborador de Plano de Classificação de Documentos e Tabela de Temporalidade D
     - Importação do PCD e TTD em .CSV
     - Importação e Exportação de .XML para os Modulos PCD e TTD
 
-Quaisquer sugestões, por favor entre em contato pelo Twitter.
-
 Email do grupo de pesquisa: cnpqdocsdigitais@gmail.com
 
-Link do projeto no GitHub: (https://github.com/MBaumgartenBR/ElPCD)
+Link do projeto no GitHub: (https://github.com/mbaumgartenbr/elpcd_python)
 Link para contato: (https://twitter.com/mbaumgartenbr)
 
 Para rodar o projeto no seu ambiente de desenvolvimento (assumindo que já possua as versões mais recentes do python, pip e virtualenv).
 Clone o repositório do projeto:
 ```bash
-git clone https://github.com/MBaumgartenBR/ElPCD.git
+git clone https://github.com/mbaumgartenbr/elpcd_python.git
 ```
 Abra a pasta do repositório:
 ```bash
-cd ElPCD/
+cd elpcd_python/
 ```
 Crie o ambiente virtual para os pacotes do python:
 ```bash
@@ -67,4 +67,3 @@ Tudo pronto para modificar quaisquer arquivos que desejar.
 ```bash
 python3 main.py
 ```
-**Caso ocorra algum erro, por favor informe à mim pelo Twitter.**
